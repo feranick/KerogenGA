@@ -2,7 +2,7 @@
 #
 # Extract XYZ coordinate file from MongoDB StructureName output
 #
-# version 1.0-20150626a
+# version 1.1-20150626a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -12,6 +12,16 @@
 
 filename="$1"
 outfile=$filename".xyz"
+
+num ()
+{
+    if [[ $1 == *[,]* ]]
+    then
+        echo "$1" | sed 's/.$//'
+    else
+        echo "$1"
+    fi
+}
 
 read -r line < $filename
 numberatoms=$(echo $line | grep -o "index" | wc -l)
@@ -34,23 +44,24 @@ do
     #echo "I = " $i  "WORD: " $word
     if [ $i -eq 2 ]
     then
-        index=$(echo $word | sed 's/.$//')
+        index=$(num $word)
     fi
     if [ $i -eq 5 ]
     then
-        element=$(echo $word | sed 's/.$//')
+        element=$(num $word)
     fi
     if [ $i -eq 8 ]
     then
-        x=$(echo $word | sed 's/.$//')
+        x=$(num $word)
     fi
     if [ $i -eq 11 ]
     then
-        y=$(echo $word | sed 's/.$//')
+        y=$(num $word)
     fi
     if [ $i -eq 14 ]
     then
-        z=$(echo $word | sed 's/.$//')
+        z=$(num $word)
+        echo "Z: " $z
 
         if [ $element = "1" ]
         then

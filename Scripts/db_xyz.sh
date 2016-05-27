@@ -2,7 +2,7 @@
 #
 # Extract XYZ coordinate file from MongoDB Molecule
 #
-# version 1.0-20150626a
+# version 1.1-20150626b
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -12,12 +12,23 @@
 # Usage: db_xyz.sh <name molecule>
 
 molecule="$1"
-outfile=$molecule".xyz"
-
 database="shale"
 
+num ()
+{
+    if [[ $1 == *[,]* ]]
+    then
+        echo "$1" | sed 's/.$//'
+    else
+        echo "$1"
+    fi
+}
+
+
 molinfo=$(echo "db.molecule.find({name:\"$1\"})" | mongo $database)
-molstructname=$(echo $molinfo | sed 's/ }.*$//' | sed 's/.*\"structurename\" ://')
+molstructname=$(echo $molinfo | sed 's/\" }.*$//' | sed 's/.*\"structurename\" : \"//')
+outfile=$molstructname".xyz"
+
 molstructure=$(echo "db.structure.find({structurename:$molstructname})" | mongo $database)
 
 numberatoms=$(echo $molstructure | grep -o "index" | wc -l)
@@ -30,30 +41,37 @@ i=0
 
 for word in $molstructure;
 do
-    if [ $word = "\"index\"" ] then
+    if [ $word = "\"index\"" ]
+    then
         ((i=0))
     fi
 
-    if [ $i -eq 2 ] then
-        index=$(echo $word | sed 's/.$//')
+    #echo "I = " $i  "WORD: " $word
+    if [ $i -eq 2 ]
+    then
+        index=$(num $word)
     fi
 
-    if [ $i -eq 5 ] then
-        element=$(echo $word | sed 's/.$//')
+    if [ $i -eq 5 ]
+    then
+        element=$(num $word)
     fi
 
-    if [ $i -eq 8 ] then
-        x=$(echo $word | sed 's/.$//')
+    if [ $i -eq 8 ]
+    then
+        x=$(num $word)
     fi
 
-    if [ $i -eq 11 ] then
-        y=$(echo $word | sed 's/.$//')
+    if [ $i -eq 11 ]
+    then
+        y=$(num $word)
     fi
+    if [ $i -eq 14 ]
+    then
+        z=$(num $word)
 
-    if [ $i -eq 14 ]  then
-        z=$(echo $word | sed 's/.$//')
-
-        if [ $element = "1" ]  then
+        if [ $element = "1" ]
+        then
             echo "C $x $y $z" >> $outfile
         else
             echo "H $x $y $z" >> $outfile
@@ -62,6 +80,7 @@ do
     ((i++))
 
 done
+
 
 echo "XYZ coordinates saved in: " $outfile
 
