@@ -1,0 +1,12 @@
+Hopper_shale_Tight_z8.5aro0.4ali_batch1_4 : 0.0138973561213377
+Hopper_shale_tight_NIST_library_51-100_pah086 : 0.0054727348571225465
+Hopper_shale_Tight_z9.0aro0.2ali_batch2_42 : 0.002342871746730501
+Hopper_shale_tight_NIST_library_351-400_pah358 : 5.928024634989703E-4
+Hopper_shale_tight_NIST_library_351-400_pah372 : 0.008066566600418167
+Hopper_shale_tight_NIST_library_151-200_pah168 : 3.1862298023265266E-4
+Hopper_shale_Tight_z9.0aro0.2ali_batch2_53 : 0.002280837195495835
+Hopper_shale_tight_NIST_library_1-50_pah016 : 0.007464824563790647
+Hopper_shale_tight_NIST_library_351-400_pah373 : 0.0023948419480145054
+Hopper_shale_tight_NIST_library_201-250_pah247 : 0.003646394011507078
+Hopper_shale_tight_NIST_library_201-250_pah212 : 0.0032441139519011793
+Hopper_shale_tight_NIST_library_1-50_pah049 : 0.008690649526660871
