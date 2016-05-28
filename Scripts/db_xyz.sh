@@ -2,7 +2,7 @@
 #
 # Extract XYZ coordinate file from MongoDB Molecule
 #
-# version 1.1-20150626b
+# version 1.2-20150627b
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -29,7 +29,7 @@ molinfo=$(echo "db.molecule.find({name:\"$1\"})" | mongo $database)
 molstructname=$(echo $molinfo | sed 's/\" }.*$//' | sed 's/.*\"structurename\" : \"//')
 outfile=$molstructname".xyz"
 
-molstructure=$(echo "db.structure.find({structurename:$molstructname})" | mongo $database)
+molstructure=$(echo "db.structure.find({structurename:\"$molstructname\"})" | mongo $database)
 
 numberatoms=$(echo $molstructure | grep -o "index" | wc -l)
 

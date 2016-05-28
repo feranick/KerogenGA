@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Extract XYZ coordinate file from Kerogen-genome search
+# Create individual XYZ coordinate file from full Kerogen-genome DB
 #
 # version 1.2-20150627a
 #
@@ -9,8 +9,9 @@
 # License: GNU General Public License v.2 or above
 #
 
-filename="bestIndividual.txt"
+filename="checkpoint.conversion.txt"
 database="shale"
+logfile="log.txt"
 
 num ()
 {
@@ -24,35 +25,35 @@ num ()
 
 while read -r line
 do
-    name=$(echo $line | sed 's/ :.*$//')
-    fitness=$(echo $line | sed 's/.*: //')
+    number=$(echo $line | sed 's/ :.*$//')
+    name=$(echo $line | sed 's/.*: //')
 
-    echo "Molecule: "  $name
-    echo " Fitness: " $fitness
+    echo "Molecule: "  $name >> $logfile
+    echo " Index: " $number >> $logfile
 
     molinfo=$(echo "db.molecule.find({name:\"$name\"})" | mongo $database)
     #echo $molinfo
 
     molstructname=$(echo $molinfo | sed 's/\" }.*$//' | sed 's/.*\"structurename\" : \"//')
-    echo " Molecular structurename: " $molstructname
+    echo " Molecular structurename: " $molstructname >> $logfile
 
     outfile=$molstructname".xyz"
 
     numrings=$(echo $molinfo | sed 's/, \"raman.*$//' | sed 's/.*\"numberofrings\" ://')
-    echo " Number of aromatic rings: " $numrings
+    echo " Number of aromatic rings: " $numrings >> $logfile
 
     molstructure=$(echo "db.structure.find({structurename:\"$molstructname\"})" | mongo $database)
     #echo $molstructure
 
     numberatoms=$(echo $molstructure | grep -o "index" | wc -l)
-    echo $numberatoms >> $outfile
-    echo $molstructname  >> $outfile
+    echo " Number of atoms: "$numberatoms >> $logfile
+    #echo " Number of aromatic rings: "$molstructname >> $logfile
 
     molstructure=$(echo $molstructure | sed 's/.*\"atoms\" : \[ //' )
     i=0
 
     for word in $molstructure;
-    do
+        do
         if [ $word = "\"index\"" ]
         then
             ((i=0))
@@ -93,7 +94,9 @@ do
 
     done
 
-    echo "XYZ coordinates saved in: " $outfile
-    echo
+    echo " XYZ coordinates saved in: " $outfile >> $logfile
+    echo >> $logfile
 
 done < "$filename"
+
+echo "Saved " $index "structures in XYZ files." >> $logfile
