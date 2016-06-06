@@ -2,7 +2,7 @@
 #
 # Extract XYZ coordinate file from MongoDB Molecule
 #
-# version 1.4-20160605a
+# version 1.5-20160605a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -15,7 +15,7 @@
 if [[ $1 == "-v" ]]
      then
 	echo
-	echo " Version 1.4-20160605a"
+	echo " Version 1.5-20160605a"
         echo
 	exit
      fi

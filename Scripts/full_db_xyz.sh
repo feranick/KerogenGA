@@ -2,22 +2,31 @@
 #
 # Create individual XYZ coordinate file from full Kerogen-genome DB
 #
-# version 1.4-20160605a
+# version 1.5-20160605a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
 # License: GNU General Public License v.2 or above
 #
 
+filename="checkpoint.conversion.txt"
+
 if [[ $1 == "-v" ]]
      then
 	echo
-	echo " Version 1.4-20160605a"
+	echo " Version 1.5-20160605a"
         echo
 	exit
      fi
 
-filename="checkpoint.conversion.txt"
+if [ ! -f $filename ]
+     then
+	echo
+	echo " Required file:" $filename "does not exist"
+        echo
+	exit
+     fi
+
 database="shale"
 logfile="log.txt"
 

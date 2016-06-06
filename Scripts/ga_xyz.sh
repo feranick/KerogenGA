@@ -2,23 +2,32 @@
 #
 # Extract XYZ coordinate file from Kerogen-genome search
 #
-# version 1.4-20160605a
+# version 1.5-20160605a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
 # License: GNU General Public License v.2 or above
 #
 
+filename="bestIndividual.txt"
+
 if [[ $1 == "-v" ]]
      then
 	echo
-	echo " Version 1.4-20160605a"
+	echo " Version 1.5-20160605a"
+        echo
+	exit
+     fi
+
+if [ ! -f $filename ]
+     then
+	echo
+	echo " Required file:" $filename "does not exist"
         echo
 	exit
      fi
 
 
-filename="bestIndividual.txt"
 database="shale"
 outfilePC="bestIndividual_concentrations.csv"
 
