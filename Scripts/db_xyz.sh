@@ -2,7 +2,7 @@
 #
 # Extract XYZ coordinate file from MongoDB Molecule
 #
-# version 1.2-20150627b
+# version 1.4-20160605a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -10,6 +10,23 @@
 # License: GNU General Public License v.2 or above
 #
 # Usage: db_xyz.sh <name molecule>
+
+
+if [[ $1 == "-v" ]]
+     then
+	echo
+	echo " Version 1.4-20160605a"
+        echo
+	exit
+     fi
+
+if [[ -z $1 ]]
+     then
+	echo
+	echo " Usage: db_xyz.sh <name molecule>"
+	echo
+	exit
+     fi
 
 molecule="$1"
 database="shale"

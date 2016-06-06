@@ -2,12 +2,21 @@
 #
 # Extract XYZ coordinate file from Kerogen-genome search
 #
-# version 1.3-20160603
+# version 1.4-20160605a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
 # License: GNU General Public License v.2 or above
 #
+
+if [[ $1 == "-v" ]]
+     then
+	echo
+	echo " Version 1.4-20160605a"
+        echo
+	exit
+     fi
+
 
 filename="bestIndividual.txt"
 database="shale"
