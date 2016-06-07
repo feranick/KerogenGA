@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Extract XYZ coordinate file from Kerogen-genome search
+# Extract Raman Spectra from Kerogen-genome search
 #
-# version 1.5.`-20160607b
+# version 1.0-20160607b
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -14,7 +14,7 @@ filename="bestIndividual.txt"
 if [[ $1 == "-v" ]]
      then
 	echo
-	echo " Version 1.5.1-20160607b"
+	echo " Version 1.0-20160607b"
         echo
 	exit
      fi
@@ -69,64 +69,46 @@ do
     molstructname=$(echo $molinfo | sed 's/\" }.*$//' | sed 's/.*\"structurename\" : \"//')
     echo " Molecular structurename: "$molstructname
 
-    outfile=$molstructname".xyz"
+    outfile=$molstructname"_RS.txt"
 
     molstructure=$(echo "db.structure.find({structurename:\"$molstructname\"})" | mongo $database)
 
     numberatoms=$(echo $molstructure | grep -o "index" | wc -l)
-    echo $numberatoms >> $outfile
-    echo $molstructname  >> $outfile
 
-    molstructure=$(echo $molstructure | sed 's/.*\"atoms\" : \[ //' )
+    ramanspectrumId=$(echo $molinfo | sed 's/\"), \"str.*$//' | sed 's/.*\"ramanspectrum_id" : ObjectId(\"//')
+    echo " Raman spectrum ID: "$ramanspectrumId
+
+    ramanspectrumInfo=$(echo "db.ramanspectra.find({\"_id\":ObjectId(\"$ramanspectrumId\")})" | mongo $database)
+    rs=$(echo $ramanspectrumInfo | sed 's/.*\"content\" : \[ //' )  
     i=0
 
-    for word in $molstructure;
+    for word in $rs;
     do
-        if [ $word = "\"index\"" ]
+        if [ $word = "\"frequency\"" ]
         then
             ((i=0))
         fi
 
         if [ $i -eq 2 ]
         then
-            index=$(num $word)
+            frequency=$(num $word)
         fi
 
         if [ $i -eq 5 ]
         then
-            element=$(num $word)
-        fi
+            activity=$(num $word)
+            echo "$frequency $activity" >> $outfile
+	fi
 
-        if [ $i -eq 8 ]
-        then
-            x=$(num $word)
-        fi
-
-        if [ $i -eq 11 ]
-        then
-            y=$(num $word)
-        fi
-
-        if [ $i -eq 14 ]
-        then
-            z=$(num $word)
-
-            if [ $element = "1" ]
-            then
-                echo "C $x $y $z" >> $outfile
-            else
-                echo "H $x $y $z" >> $outfile
-            fi
-        fi
         ((i++))
 
     done
 
-    echo " XYZ coordinates saved in: " $outfile
+    echo " Raman activityes saved in: "$outfile
     echo $name","$conc >> $outfilePC
     echo 
 
 done < "$filename"
 
-    echo " Concentrations saved in: " $outfilePC
+    echo " Concentrations saved in: "$outfilePC
     echo
