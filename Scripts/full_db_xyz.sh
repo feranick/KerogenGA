@@ -2,7 +2,7 @@
 #
 # Create individual XYZ coordinate file from full Kerogen-genome DB
 #
-# version 1.5-20160605a
+# version 1.5.1-20160607a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -52,12 +52,12 @@ do
     #echo $molinfo
 
     molstructname=$(echo $molinfo | sed 's/\" }.*$//' | sed 's/.*\"structurename\" : \"//')
-    echo " Molecular structurename: " $molstructname >> $logfile
+    echo " Molecular structurename: "$molstructname >> $logfile
 
     outfile=$number"_"$molstructname".xyz"
 
     numrings=$(echo $molinfo | sed 's/, \"raman.*$//' | sed 's/.*\"numberofrings\" ://')
-    echo " Number of aromatic rings: " $numrings >> $logfile
+    echo " Number of aromatic rings: "$numrings >> $logfile
 
     molstructure=$(echo "db.structure.find({structurename:\"$molstructname\"})" | mongo $database)
     #echo $molstructure
@@ -113,7 +113,7 @@ do
 
     done
 
-    echo " XYZ coordinates saved in: " $outfile >> $logfile
+    echo " XYZ coordinates saved in: "$outfile >> $logfile
     echo >> $logfile
 
 done < "$filename"
