@@ -1,0 +1,6 @@
+set term pngcairo size 1280,960
+set output outputname
+set xlabel 'Raman shift [1/cm]
+set ylabel 'Raman activity'
+plot datafile title outputname w lines
+
