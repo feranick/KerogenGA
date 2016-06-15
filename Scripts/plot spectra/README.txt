@@ -18,6 +18,10 @@ For plotting two individual spectra on the same plot:
 
 	plotrs.sh <raman spectra file 1> <raman spectra file 2> 
 
+For plotting three individual spectra on the same plot:
+
+	plotrs.sh <raman spectra file 1> <raman spectra file 2> <raman spectra file 3> 
+
 For batch, run:
 
 	find . -name '*_RS.txt' -exec plotrs.sh {} \;
