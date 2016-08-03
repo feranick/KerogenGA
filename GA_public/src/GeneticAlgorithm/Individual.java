@@ -97,7 +97,7 @@ public class Individual {
 				rt = rt+" "+genes[i]+"/"+plain.format(evaluation.parameters.getEntry(i));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
     	return rt;
     }
