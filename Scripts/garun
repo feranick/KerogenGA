@@ -1,0 +1,6 @@
+#!/bin/bash
+
+java -jar /export/apps/gt.jar --NIST --elitefit "$2" "$1" > output.txt
+ga_xyz.sh
+ga_rs.sh
+
