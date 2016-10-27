@@ -5,7 +5,7 @@
 *
 * Average
 * Take average on all ASCII files in folder.
-* version: 20161026a
+* version: 20161026b
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -25,7 +25,7 @@ cvs = False
 ''' Main '''
 #**********************************************
 def main():
-    outputName = os.path.relpath(".","..") + '_average' + str(datetime.now().strftime('_%Y-%m-%d_%H-%M-%S.txt'))
+    outputName = os.path.relpath(".","..") + '_average' + str(datetime.now().strftime('_%Y-%m-%d_%H-%M-%S'))
     i = 0
     for f in glob.glob('*.txt'):
         i+=1
@@ -39,8 +39,17 @@ def main():
         else:
             Ya += Y
     Ya /= i
-    saveData(outputName, Xa, Ya, False)
-    print('\n Average saved in: ' + outputName)
+
+    if cvs==True:
+        delim = ','
+        outputName += '.csv'
+    else:
+        delim = '\t'
+        outputName += '.txt'
+
+    np.savetxt(outputName, np.transpose([Xa,Ya]), delimiter=delim, newline='\n', fmt='%.5f')
+
+    print('\n Average saved in: ' + outputName + '\n')
 
 
 #**********************************************
@@ -59,23 +68,6 @@ def readFile(sampleFile):
     Y=Rtot[1,:]
     X=Rtot[0,:]
     return X, Y
-
-#**********************************************
-''' Save average file '''
-#**********************************************
-
-def saveData(inputFile, x, y, cvs):
-    
-    with open(inputFile, "a") as xyFile:
-        for i in range(0, len(x)):
-            
-            if cvs==True:
-                xyFile.write('{:},'.format(x[i]))
-                xyFile.write('{:},'.format(y[i]))
-            else:
-                xyFile.write('{:}\t'.format(x[i]))
-                xyFile.write('{:}\n'.format(y[i]))
-        xyFile.close()
 
 #************************************
 ''' Main initialization routine '''
