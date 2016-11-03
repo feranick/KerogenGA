@@ -5,7 +5,7 @@
 *
 * CollectGA
 *
-* version: 20161102a
+* version: 20161102b
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -20,7 +20,8 @@ import sys, os.path, getopt, glob, csv
 from datetime import datetime, date
 from pandas import read_csv
 
-#inputFile = 'bestIndividual_concentrations.csv'
+inputFile = 'bestIndividual_concentrations.csv'
+#inputFile = sys.argv[1]
 summaryFile = "summaryFile.csv"
 summaryFolder = os.getenv("HOME") + '/Desktop/'
 
@@ -29,7 +30,6 @@ summaryFolder = os.getenv("HOME") + '/Desktop/'
 ''' Main '''
 #**********************************************
 def main():
-        inputFile = sys.argv[1]
         runCollect(inputFile)
 
 #**********************************************
@@ -76,7 +76,7 @@ def runCollect(inputFile):
         else:
             L.append(X[i,0])
             summary[i+1] = ''
-            print('\033[1m' + L[j] + '\t first detected!' + '\033[0m')
+            print('\033[1m' + X[i,0] + '\t first detected!' + '\033[0m')
             summary = np.append(summary, X[i,1])
             ind += 1
 
