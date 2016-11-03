@@ -68,7 +68,7 @@ def runCollect(inputFile):
     #**********************************************
     ''' Detect if molecule has been already seen '''
     #**********************************************
-    for i in range(0,12):
+    for i in range(0,len(X)):
         if X[i,0] in L:
             j = L.index(X[i,0])
             print(L[j] + '\t already detected')
