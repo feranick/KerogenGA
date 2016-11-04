@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * CollectGA
-* version: 20161103a
+* version: 20161104a
 * By: Nicola Ferralis <feranick@hotmail.com>
 * help: python collectGA.py -h
 ***********************************************************
@@ -18,6 +18,7 @@ from pandas import read_csv
 #inputFile = sys.argv[1]
 summaryFile = "summaryFile.csv"
 summaryFolder = os.getenv("HOME") + '/Desktop/'
+fitnessFile = "output.txt"
 
 
 #**********************************************
@@ -28,7 +29,11 @@ def main():
     if len(sys.argv) < 2:
         inputFile = 'bestIndividual_concentrations.csv'
     else:
-        inputFile = sys.argv[1]
+        if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+            usage()
+            sys.exit(2)
+        else:
+            inputFile = sys.argv[1]
         
     runCollect(inputFile)
 
@@ -37,14 +42,17 @@ def main():
 #**********************************************
 
 def runCollect(inputFile):
+    
+    pos = readFitness(fitnessFile)
 
     #**********************************************
     ''' Read new file '''
     #**********************************************
     X = readFile(inputFile)
 
-    print ('New GA file: ' + os.path.relpath(".","..") + '\n')
+    print (' New GA file: ' + os.path.relpath(".",".."))
     summaryFile_path = summaryFolder + summaryFile
+    print (' Fitness: ' + str(pos))
     
     #**********************************************
     ''' Read summary file '''
@@ -56,13 +64,14 @@ def runCollect(inputFile):
     else:
         with open(summaryFile_path, 'a') as f:
             csv_out=csv.writer(f)
-            csv_out.writerow(np.append(['name'], X[:,0]))
+            csv_out.writerow(np.append(['name', 'fitness'], X[:,0]))
             f.close()
-        L = np.append(['name'], X[:,0]).tolist()
-        lr = np.append(os.path.relpath(".",".."), X[:,1]).tolist()
+        L = np.append(['name', 'fitness'], X[:,0]).tolist()
+        lr = np.append(os.path.relpath(".",".."), np.append(pos, X[:,1])).tolist()
 
     summary = lr
     summary[0] = os.path.relpath(".","..")
+    summary[1] = pos
     origL = len(L)
 
     #**********************************************
@@ -71,12 +80,12 @@ def runCollect(inputFile):
     for i in range(0,len(X)):
         if X[i,0] in L:
             j = L.index(X[i,0])
-            print(L[j] + '\t already detected')
+            print(' ' + L[j] + '\t already detected')
             summary[j] = X[i,1]
         else:
             L.append(X[i,0])
             summary[i+1] = ''
-            print('\033[1m' + X[i,0] + '\t first detected!' + '\033[0m')
+            print('+\033[1m' + X[i,0] + '\t first detected!' + '\033[0m')
             summary = np.append(summary, X[i,1])
             ind += 1
 
@@ -136,15 +145,39 @@ def readSummary(summaryFile):
     except:
         print('\033[1m File: \"' + summaryFile + '\" not found \n ' + '\033[0m')
         return
-    
+
     return L, len(lastrow)
+
+
+#**********************************************
+''' Read Fitness '''
+#**********************************************
+
+def readFitness(fitnessFile):
+    try:
+        with open(fitnessFile, 'r') as f:
+            lastrow = None
+            beforelastrow = None
+            for i, lastrow in enumerate(f):
+                beforelastrow = lastrow
+                pass
+                next(enumerate(f))
+    except:
+        print('\033[1m File: \"' + summaryFile + '\" not found \n ' + '\033[0m')
+        return
+
+    pos = beforelastrow.find("Best Fitness =")+15
+    return beforelastrow[pos:]
 
 #************************************
 ''' Lists the program usage '''
 #************************************
 def usage():
-    print('\n Usage:')
-    print('  python collectGA.py \n')
+    print(' Usage:')
+    print('\n   for default filenames:')
+    print('     python collectGA.py ')
+    print('\n   for custom filenames:')
+    print('     python collectGA.py <filename>\n')
 
 #************************************
 ''' Main initialization routine '''
