@@ -2,25 +2,19 @@
 # -*- coding: utf-8 -*-
 '''
 **********************************************************
-*
 * CollectGA
-*
-* version: 20161102b
-*
+* version: 20161103a
 * By: Nicola Ferralis <feranick@hotmail.com>
-*
 * help: python collectGA.py -h
-*
 ***********************************************************
 '''
 print(__doc__)
 
 import numpy as np
-import sys, os.path, getopt, glob, csv
-from datetime import datetime, date
+import sys, os.path, csv
 from pandas import read_csv
 
-inputFile = 'bestIndividual_concentrations.csv'
+#inputFile = 'bestIndividual_concentrations.csv'
 #inputFile = sys.argv[1]
 summaryFile = "summaryFile.csv"
 summaryFolder = os.getenv("HOME") + '/Desktop/'
@@ -30,21 +24,27 @@ summaryFolder = os.getenv("HOME") + '/Desktop/'
 ''' Main '''
 #**********************************************
 def main():
-        runCollect(inputFile)
+    
+    if len(sys.argv) < 2:
+        inputFile = 'bestIndividual_concentrations.csv'
+    else:
+        inputFile = sys.argv[1]
+        
+    runCollect(inputFile)
 
 #**********************************************
 ''' RunCollection '''
 #**********************************************
 
 def runCollect(inputFile):
-    print ('New GA file: ' + os.path.relpath(".","..") + '\n')
-    summaryFile_path = summaryFolder + summaryFile
-    outputName = os.path.relpath(".","..") + '_collect' + '.csv'
 
     #**********************************************
     ''' Read new file '''
     #**********************************************
     X = readFile(inputFile)
+
+    print ('New GA file: ' + os.path.relpath(".","..") + '\n')
+    summaryFile_path = summaryFolder + summaryFile
     
     #**********************************************
     ''' Read summary file '''
@@ -115,8 +115,8 @@ def readFile(sampleFile):
                 X = np.row_stack((X, [np.array(row[0]), np.array(row[1], dtype=float)]))
 
     except:
-        print('\033[1m' + '\n Sample data file not found \n ' + '\033[0m')
-        return
+        print('\033[1m File: \"' +  sampleFile + '\" not found \n ' + '\033[0m')
+        sys.exit(2)
 
     return X
 
@@ -134,7 +134,7 @@ def readSummary(summaryFile):
             lastrow = None
             for lastrow in csv.reader(f): pass
     except:
-        print('\033[1m' + '\n Sample data file not found \n ' + '\033[0m')
+        print('\033[1m File: \"' + summaryFile + '\" not found \n ' + '\033[0m')
         return
     
     return L, len(lastrow)
@@ -145,8 +145,6 @@ def readSummary(summaryFile):
 def usage():
     print('\n Usage:')
     print('  python collectGA.py \n')
-
-
 
 #************************************
 ''' Main initialization routine '''
