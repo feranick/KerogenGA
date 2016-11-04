@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+#use the script as follows:
+#./sub_ga nmol inpfile | qsub -N jobname
+
+@ARGV > 0 or die "usage: sub_ga nmol inpfile|qsub -N jobname \n";
+$n=1;
+$nprocs=$n*1;
+$nmol=$ARGV[0];
+
+$folder=$ARGV[1];
+$inpfile = $folder;
+$folder =~ s{\.[^.]+$}{};
+
+#This part creates necessary directories
+
+print "#!/bin/sh
+#PBS -l nodes=$n:ppn=1
+#PBS -N 3DPV
+
+cd \$PBS_O_WORKDIR
+cat \$PBS_NODEFILE > \$PBS_O_WORKDIR/nodes.out
+
+  mkdir $folder
+  echo $folder
+  cp $inpfile $folder
+  cd $folder
+  java -jar /export/apps/gt.jar --laser 633.0 --NIST --elitefit $nmol $inpfile > output.txt
+      ga_xyz.sh
+";
