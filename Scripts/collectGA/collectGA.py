@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * CollectGA
-* version: 20161104a
+* version: 20161104c
 * By: Nicola Ferralis <feranick@hotmail.com>
 * help: python collectGA.py -h
 ***********************************************************
@@ -14,12 +14,9 @@ import numpy as np
 import sys, os.path, csv
 from pandas import read_csv
 
-#inputFile = 'bestIndividual_concentrations.csv'
-#inputFile = sys.argv[1]
 summaryFile = "summaryFile.csv"
 summaryFolder = os.getenv("HOME") + '/Desktop/'
 fitnessFile = "output.txt"
-
 
 #**********************************************
 ''' Main '''
@@ -67,11 +64,11 @@ def runCollect(inputFile):
             csv_out.writerow(np.append(['name', 'fitness'], X[:,0]))
             f.close()
         L = np.append(['name', 'fitness'], X[:,0]).tolist()
-        lr = np.append(os.path.relpath(".",".."), np.append(pos, X[:,1])).tolist()
+        lr = np.append(os.path.relpath(".",".."), np.append(float(pos), X[:,1])).tolist()
 
     summary = lr
     summary[0] = os.path.relpath(".","..")
-    summary[1] = pos
+    summary[1] = float(pos)
     origL = len(L)
 
     #**********************************************
@@ -158,14 +155,15 @@ def readFitness(fitnessFile):
         with open(fitnessFile, 'r') as f:
             lastrow = None
             beforelastrow = None
-            for i, lastrow in enumerate(f):
-                beforelastrow = lastrow
-                pass
-                next(enumerate(f))
+            for lastrow in enumerate(f):
+                if(lastrow[1].find('Predicted fit') == -1):
+                    beforelastrow = lastrow[1]
+                else:
+                    pass
     except:
-        print('\033[1m File: \"' + summaryFile + '\" not found \n ' + '\033[0m')
+        print('\033[1m File: \"' + fitnessFile + '\" not found \n ' + '\033[0m')
         return
-
+                    
     pos = beforelastrow.find("Best Fitness =")+15
     return beforelastrow[pos:]
 
