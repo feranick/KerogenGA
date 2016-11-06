@@ -2,7 +2,7 @@
 #
 # Extract XYZ coordinate file from Kerogen-genome search
 #
-# version 1.5.`-20160607b
+# version 1.6.-20161106a
 #
 # Nicola Ferralis <ferralis@mit.edu>
 #
@@ -14,7 +14,7 @@ filename="bestIndividual.txt"
 if [[ $1 == "-v" ]]
      then
 	echo
-	echo " Version 1.5.1-20160607b"
+	echo " Version 1.6-20161106a"
         echo
 	exit
      fi
@@ -45,8 +45,10 @@ totconc=0
 while read -r line
 do
     coeff=$(echo $line | sed 's/.*: //')
+    coeff=`echo ${coeff} | sed -e 's/[eE]+*/\\*10\\^/'`
     totconc=$(echo "$totconc+$coeff" | bc)
-
+    #echo = "coeff: "$coeff
+    #echo "$coeff" | bc
 done <  <(tr -d '\r' < "$filename")
 
 echo
@@ -55,11 +57,13 @@ while read -r line
 do
     name=$(echo $line | sed 's/ :.*$//')
     coeff=$(echo $line | sed 's/.*: //')
+    coeff=`echo ${coeff} | sed -e 's/[eE]+*/\\*10\\^/'`
     conc=$(echo "scale=2; 100*$coeff/$totconc" | bc)
     
     echo "Molecule: "$name
     echo " Linear combination coefficient: "$coeff
     echo " Concentration (%): "$conc
+    echo " Total Concentration: "$totconc
 
     molinfo=$(echo "db.molecule.find({name:\"$name\"})" | mongo $database)
 

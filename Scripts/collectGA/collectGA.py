@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * CollectGA
-* version: 20161104c
+* version: 20161105a
 * By: Nicola Ferralis <feranick@hotmail.com>
 * help: python collectGA.py -h
 ***********************************************************
@@ -81,7 +81,7 @@ def runCollect(inputFile):
             summary[j] = X[i,1]
         else:
             L.append(X[i,0])
-            summary[i+1] = ''
+            summary[i+2] = ''
             print('+\033[1m' + X[i,0] + '\t first detected!' + '\033[0m')
             summary = np.append(summary, X[i,1])
             ind += 1
