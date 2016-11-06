@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * CollectGA
-* version: 20161105a
+* version: 20161106b
 * By: Nicola Ferralis <feranick@hotmail.com>
 * help: python collectGA.py -h
 ***********************************************************
@@ -24,7 +24,7 @@ fitnessFile = "output.txt"
 def main():
     
     if len(sys.argv) < 2:
-        inputFile = 'bestIndividual_concentrations.csv'
+        inputFile = 'bestIndividual.txt'
     else:
         if sys.argv[1] == '-h' or sys.argv[1] == '--help':
             usage()
@@ -115,11 +115,16 @@ def runCollect(inputFile):
 def readFile(sampleFile):
     try:
         X=np.empty([0,2])
+        totconc=0
+        ind=0
         with open(sampleFile, 'r') as f:
-            data = csv.reader(f, delimiter=',')
+            data = csv.reader(f, delimiter=' ')
             for row in data:
-                X = np.row_stack((X, [np.array(row[0]), np.array(row[1], dtype=float)]))
-
+                totconc += float(row[2])
+                X = np.row_stack((X, [np.array(row[0]), row[2]]))
+                ind+=1
+            for i in range(0,ind):
+                X[i,1]= float(X[i,1])*100/totconc
     except:
         print('\033[1m File: \"' +  sampleFile + '\" not found \n ' + '\033[0m')
         sys.exit(2)
