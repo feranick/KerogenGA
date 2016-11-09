@@ -162,6 +162,7 @@ public class MainDriver {
 		if(elitefit)
 		{
 			System.out.println("Link Start.");
+            System.out.printf(" Experimental Raman spectra: %s\n", inputSpectrum);
             System.out.printf(" Excitation wavelength: %s\n", laserwavelength);
             System.out.printf(" Peak width: %s\n", generalBrd);
             System.out.printf(" Number of molecule per fit: %s\n", GAgenesize);
