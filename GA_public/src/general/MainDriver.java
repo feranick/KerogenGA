@@ -46,6 +46,7 @@ public class MainDriver {
 		boolean NIST=false;
 		boolean diamondoid = false;
 		double laserwavelength = 633.0;
+        double generalBrd = 5.0;
 		
 		for(int i=0; i<args.length; i++)
 		{
@@ -75,9 +76,20 @@ public class MainDriver {
 				}
 				else
 				{
-					System.out.println("Missing input laser wavelength (in nm).");
+					System.out.printf("Excitation wavelength set to %s nm\n", laserwavelength);
 				}
 			}
+            else if(args[i].startsWith("--width"))
+            {
+                if(args.length>i)
+                {
+                    generalBrd = Double.parseDouble(args[i+1]);
+                }
+                else
+                {
+                    System.out.printf("Peak width set to default: %s 1/cm\n", generalBrd);
+                }
+            }
 			else if(args[i].startsWith("--combineraman"))
 			{
 				combineraman("./", laserwavelength);
@@ -125,19 +137,21 @@ public class MainDriver {
 			}
 			else if(args[i].startsWith("--help"))
 			{
-				System.out.println("GT version 1.00");
+				System.out.println("\nGT version 1.1-20161109a\n");
 				System.out.println("Usage:");
 				System.out.println("--storeraman: store calculated raman activity into the database.");
 				System.out.println("    java -jar gt.jar --storeraman gaussianoutput infofile moleculename (with info file)");
-				System.out.println("    java -jar gt.jar --storeraman gaussianoutput null moleculename (without info file)");
+				System.out.println("    java -jar gt.jar --storeraman gaussianoutput null moleculename (without info file)\n");
 				System.out.println("--elitefit N: fit an experimental raman spectrum with N spectra using genetic algorithm.");
-				System.out.println("    java -jar gt.jar --elitefit 10 ramanfilename");
+				System.out.println("    java -jar gt.jar --elitefit 10 ramanfilename\n");
 				System.out.println("--diamondoid: include diamondoids in fitting.");
-				System.out.println("    java -jar gt.jar --diamondoid --elitefit 10 ramanfilename");
+				System.out.println("    java -jar gt.jar --diamondoid --elitefit 10 ramanfilename\n");
 				System.out.println("--NIST: include NIST library in fitting.");
-				System.out.println("    java -jar gt.jar --NIST --elitefit 10 ramanfilename");
-				System.out.println("--laser wavelengthInNM: Change default wavelength (633.0) to wavelengthInNM.");
-				System.out.println("    java -jar gt.jar --laser 488.0 --NIST --elitefit 10 ramanfilename");
+				System.out.println("    java -jar gt.jar --NIST --elitefit 10 ramanfilename\n");
+				System.out.printf("--laser wavelength: Change excitation wavelength in nm (default: %s).\n", laserwavelength);
+				System.out.println("    java -jar gt.jar --laser 488.0 --NIST --elitefit 10 ramanfilename\n");
+                System.out.printf("--width peakWidth: Change peak width in 1/cm (default: %s).\n", generalBrd);
+                System.out.println("    java -jar gt.jar --width 10.0 --NIST --elitefit 10 ramanfilename\n");
 			}
 		}
 		
@@ -148,7 +162,20 @@ public class MainDriver {
 		if(elitefit)
 		{
 			System.out.println("Link Start.");
-			Elitismfit(inputSpectrum, diamondoid, GAgenesize, NIST, laserwavelength);
+            System.out.printf(" Excitation wavelength: %s\n", laserwavelength);
+            System.out.printf(" Peak width: %s\n", generalBrd);
+            System.out.printf(" Number of molecule per fit: %s\n", GAgenesize);
+            System.out.printf(" Using libraries:");
+            if(diamondoid == true)
+            {
+                System.out.printf(" diamondoids");
+            }
+            if(NIST==true)
+            {
+                System.out.printf(" NIST");
+            }
+            System.out.println("\n");
+			Elitismfit(inputSpectrum, diamondoid, GAgenesize, NIST, laserwavelength, generalBrd);
 		}
 	}
 	
@@ -323,11 +350,11 @@ public class MainDriver {
 		}
 	}
 	
-	private static void Elitismfit(String inputSpectrum, boolean isdiamondoid, int genesize, boolean withNIST, double wavelength) 
+	private static void Elitismfit(String inputSpectrum, boolean isdiamondoid, int genesize, boolean withNIST, double wavelength, double generalBrd)
 	{
 		BufferedReader input = null;
 		PrintWriter spectraoutput = null;
-		double generalBrd = 10.0;
+        //double generalBrd = 10.0;
 		try 
 		{
 			input = new BufferedReader(new FileReader(inputSpectrum));
