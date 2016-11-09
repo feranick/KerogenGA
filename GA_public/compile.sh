@@ -1,5 +1,6 @@
 #!/bin/bash
-rm -r bin/*
+rm -r bin
+mkdir bin
 javac -d bin -cp lib/\* src/general/*.java src/GeneticAlgorithm/*.java
 cp -r lib/*.jar  bin
 cp -r lib/MANIFEST.MF bin
