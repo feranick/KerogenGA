@@ -61,7 +61,7 @@ public class Spectrum {
 	
 	public String print(int i)
 	{
-		return peaks.get(i)[0] + " "+peaks.get(i)[1];
+		return peaks.get(i)[0] + "\t"+peaks.get(i)[1];
 	}
 
 	
