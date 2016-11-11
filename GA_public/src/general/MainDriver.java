@@ -206,6 +206,7 @@ public class MainDriver {
         if(spectramol)
         {
             System.out.printf("\n Still under development\n\n");
+            extractSpectra(moleculename, generalBrd);
         }
 	}
 	
@@ -610,33 +611,37 @@ public class MainDriver {
 		
 	}
 	
-    /*
-    private static void extractSpectra()
+    
+    private static void extractSpectra(String moleculename, double generalBrd)
     {
         ArrayList<DBObject> dbcollection = database.readcollectionlist("molecule");
         int sizeofdb = dbcollection.size();
+        System.out.printf("\n Size of the database %s\n", sizeofdb);
+        
+        
         ArrayList<Spectrum> spectrumcollection = new ArrayList<Spectrum>();
         ArrayList<Spectrum> originalspectrumcollection = new ArrayList<Spectrum>();
         ArrayList<String> namecollection = new ArrayList<String>();
-        if (!withNIST && !isdiamondoid)
+        for (int i = 0; i < sizeofdb; i++)
         {
-            for (int i = 0; i < sizeofdb; i++)
+            if(moleculename.equals((String) dbcollection.get(i).get("name")))
             {
+                String currentSpName = (String) dbcollection.get(i).get("name");
+                originalspectrumcollection.add(database.readRamanfromdatabase(currentSpName));
+                System.out.printf("\n %s \n", originalspectrumcollection.get(0));
+                spectrumcollection.add(normalizeSpec(readinspectrum,
+                                            originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength));
                 
-                if (dbcollection.get(i).get("numberofrings") != null && (Integer) dbcollection.get(i).get("numberofrings") > 0)
-                {
-                    String currentSpName = (String) dbcollection.get(i)
-                    .get("name");
-                    namecollection.add(currentSpName);
-                    originalspectrumcollection.add(database
-                                                   .readRamanfromdatabase(currentSpName));
-                    spectrumcollection.add(normalizeSpec(
-                                                         readinspectrum,
-                                                         originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength));
-                }
+                
+                //spectrumcollection.add(normalizeSpec(readinspectrum,
+                //                                     originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength));
+                //spectrumcollection.add(originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength);
+                
+                System.out.printf("\n OK! name: %s\n", dbcollection.get(i).get("name"));
             }
             
-            
+        }
+        /*
         try {
             spectraoutput = new PrintWriter(new FileWriter(
             namecollection.get(bestchromsome.getGene(l))+".dat"));
@@ -649,8 +654,9 @@ public class MainDriver {
             if (spectraoutput != null)
                 spectraoutput.close();
         }
+         */
     }
-    */
+    
     
     
 	private static void combineraman(String directoryname, double wavelength)
