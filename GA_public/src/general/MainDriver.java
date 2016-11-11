@@ -47,12 +47,14 @@ public class MainDriver {
 		boolean diamondoid = false;
 		double laserwavelength = 633.0;
         double generalBrd = 5.0;
+        String version = "1.1-20161111a";
 		
 		for(int i=0; i<args.length; i++)
 		{
 			if(args[i].startsWith("--version"))
 			{
-				System.out.println("GA tool version 1.0");
+				System.out.printf("\n KerogenGA version: %s\n\n", version);
+                System.out.printf(" Grossman Group @ MIT\n\n", version);
 			}
 			if(args[i].startsWith("--elitefit"))
 			{
@@ -137,7 +139,7 @@ public class MainDriver {
 			}
 			else if(args[i].startsWith("--help"))
 			{
-				System.out.println("\nGT version 1.1-20161109a\n");
+				System.out.printf("\nKerogenGA version: %s\n\n", version);
 				System.out.println("Usage:");
 				System.out.println("--storeraman: store calculated raman activity into the database.");
 				System.out.println("    java -jar gt.jar --storeraman gaussianoutput infofile moleculename (with info file)");
