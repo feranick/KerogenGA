@@ -58,14 +58,24 @@ public class MainDriver {
                 System.out.printf(" Grossman Group @ MIT\n\n", version);
 			}
             if(args[i].startsWith("--spectra"))
-            {   if(args.length>i+1)
+            {
+                if(args.length>i+1)
                 {
                     moleculename = args[i+1];
+                    if(args.length < i+3)
+                    {
+                        System.out.printf("\n Peak width set to default: %s 1/cm\n", generalBrd);
+                    }
+                    else
+                    {
+                        generalBrd = Double.parseDouble(args[i+2]);
+                        System.out.printf("\n Peak width set to: %s 1/cm\n", generalBrd);
+                    }
                     spectramol = true;
                 }
                 else
                 {
-                    System.out.println("Missing molecule name.");
+                    System.out.println(" Missing molecule name.");
                 }
             }
             
@@ -600,6 +610,49 @@ public class MainDriver {
 		
 	}
 	
+    /*
+    private static void extractSpectra()
+    {
+        ArrayList<DBObject> dbcollection = database.readcollectionlist("molecule");
+        int sizeofdb = dbcollection.size();
+        ArrayList<Spectrum> spectrumcollection = new ArrayList<Spectrum>();
+        ArrayList<Spectrum> originalspectrumcollection = new ArrayList<Spectrum>();
+        ArrayList<String> namecollection = new ArrayList<String>();
+        if (!withNIST && !isdiamondoid)
+        {
+            for (int i = 0; i < sizeofdb; i++)
+            {
+                
+                if (dbcollection.get(i).get("numberofrings") != null && (Integer) dbcollection.get(i).get("numberofrings") > 0)
+                {
+                    String currentSpName = (String) dbcollection.get(i)
+                    .get("name");
+                    namecollection.add(currentSpName);
+                    originalspectrumcollection.add(database
+                                                   .readRamanfromdatabase(currentSpName));
+                    spectrumcollection.add(normalizeSpec(
+                                                         readinspectrum,
+                                                         originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength));
+                }
+            }
+            
+            
+        try {
+            spectraoutput = new PrintWriter(new FileWriter(
+            namecollection.get(bestchromsome.getGene(l))+".dat"));
+            for (int m = 0; m < fittedspectra.get(l).size(); m++) {
+                spectraoutput.println(fittedspectra.get(l).print(m));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (spectraoutput != null)
+                spectraoutput.close();
+        }
+    }
+    */
+    
+    
 	private static void combineraman(String directoryname, double wavelength)
 	{
 		File workdir = new File(directoryname);
