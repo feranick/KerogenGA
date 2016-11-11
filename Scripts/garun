@@ -1,6 +1,5 @@
 #!/bin/bash
 
-java -jar /export/apps/gt.jar --NIST --elitefit "$2" "$1" > output.txt
+java -jar /export/apps/kga.jar --width "$2" --NIST --elitefit "$1" "$3" > output.txt
 ga_xyz.sh
-ga_rs.sh
 

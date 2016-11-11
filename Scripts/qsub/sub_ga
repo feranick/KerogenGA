@@ -1,13 +1,14 @@
 #!/usr/bin/perl
 #use the script as follows:
-#./sub_ga nmol inpfile | qsub -N jobname
+#./sub_ga nmol width inpfile | qsub -N jobname
 
-@ARGV > 0 or die "usage: sub_ga nmol inpfile|qsub -N jobname \n";
+@ARGV > 0 or die "usage: sub_ga nmol width inpfile|qsub -N jobname \n";
 $n=1;
 $nprocs=$n*1;
 $nmol=$ARGV[0];
+$width=$ARGV[1];
+$folder=$ARGV[2];
 
-$folder=$ARGV[1];
 $inpfile = $folder;
 $folder =~ s{\.[^.]+$}{};
 
@@ -24,6 +25,6 @@ cat \$PBS_NODEFILE > \$PBS_O_WORKDIR/nodes.out
   echo $folder
   cp $inpfile $folder
   cd $folder
-  java -jar /export/apps/gt.jar --laser 633.0 --diamondoid --NIST --elitefit $nmol $inpfile > output.txt
+  java -jar /export/apps/kga.jar --width $width --laser 633.0 --diamondoid --NIST --elitefit $nmol $inpfile > output.txt
       ga_xyz.sh
 ";

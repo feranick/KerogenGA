@@ -5,23 +5,18 @@ if [ -f /etc/bashrc ]; then
         . /etc/bashrc
 fi
 
-garun() { java -jar /export/apps/gt.jar --laser 633.0 --NIST --diamondoid --elitefit "$2" 
-"$1" > ou$
+garun() { java -jar /export/apps/kga.jar --width "$2" --laser 633.0 --NIST --diamondoid --elitefit "$1" "$3" > output.txt
           ga_xyz.sh
-          ga_rs.sh
          }
 
-garun_no-nist() { java -jar /export/apps/gt.jar --laser 633.0 --diamondoid --elitefit "$2" 
-"$1" > o$
-          ga_xyz.sh
-          ga_rs.sh
-         }
-
-mol() { db_xyz.sh $1
-             db_rs.sh $1
+mol()   { db_xyz.sh $1
         }
 
-sub_ga2() { sub_ga 12 "$1" | qsub -N "$2"
+sub_ga2() { sub_ga $1 $2 "$3" | qsub -N "$3"
+         ga_xyz.sh
+        }
+
+qd() { qdel "$1".wandouhuang.mit.edu
         }
 
 # User specific aliases and functions
@@ -32,4 +27,5 @@ alias qa='qstat -a'
 
 
 export BC_ENV_ARGS="$HOME/.bcrc"
-export PATH=$PATH:$HOME/bin/gnuplotdir/bin:$HOME/bin/gracedir/grace/bin
+
+export PATH=$PATH:$HOME/bin/gnuplotdir/bin:$HOME/bin/gracedir/grace/bin:/usr/local/bin
