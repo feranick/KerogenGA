@@ -47,6 +47,7 @@ public class MainDriver {
 		boolean diamondoid = false;
 		double laserwavelength = 633.0;
         double generalBrd = 5.0;
+        boolean spectramol = false;
         String version = "1.1-20161111a";
 		
 		for(int i=0; i<args.length; i++)
@@ -56,6 +57,18 @@ public class MainDriver {
 				System.out.printf("\n KerogenGA version: %s\n\n", version);
                 System.out.printf(" Grossman Group @ MIT\n\n", version);
 			}
+            if(args[i].startsWith("--spectra"))
+            {   if(args.length>i+1)
+                {
+                    moleculename = args[i+1];
+                    spectramol = true;
+                }
+                else
+                {
+                    System.out.println("Missing molecule name.");
+                }
+            }
+            
 			if(args[i].startsWith("--elitefit"))
 			{
 				if(args.length>i+2)
@@ -180,6 +193,10 @@ public class MainDriver {
             System.out.println("\n");
 			Elitismfit(inputSpectrum, diamondoid, GAgenesize, NIST, laserwavelength, generalBrd);
 		}
+        if(spectramol)
+        {
+            System.out.printf("\n Still under development\n\n");
+        }
 	}
 	
 	private static void addramantodatabase(String gaussianoutputfilename, String initialconfigfilename, String moleculename)
