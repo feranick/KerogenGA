@@ -48,7 +48,10 @@ public class MainDriver {
 		double laserwavelength = 633.0;
         double generalBrd = 5.0;
         boolean spectramol = false;
-        String version = "1.1-20161111a";
+        double inFreq = 0.0;
+        double enFreq = 1800.0;
+        double stepFreq = 1.0;
+        String version = "1.2-20161111b";
 		
 		for(int i=0; i<args.length; i++)
 		{
@@ -57,20 +60,13 @@ public class MainDriver {
 				System.out.printf("\n KerogenGA version: %s\n\n", version);
                 System.out.printf(" Grossman Group @ MIT\n\n", version);
 			}
+            
             if(args[i].startsWith("--spectra"))
             {
+                System.out.println(" \n");
                 if(args.length>i+1)
                 {
                     moleculename = args[i+1];
-                    if(args.length < i+3)
-                    {
-                        System.out.printf("\n Peak width set to default: %s 1/cm\n", generalBrd);
-                    }
-                    else
-                    {
-                        generalBrd = Double.parseDouble(args[i+2]);
-                        System.out.printf("\n Peak width set to: %s 1/cm\n", generalBrd);
-                    }
                     spectramol = true;
                 }
                 else
@@ -78,6 +74,68 @@ public class MainDriver {
                     System.out.println(" Missing molecule name.");
                 }
             }
+            else if(args[i].startsWith("--laser"))
+            {
+                if(args.length>i)
+                {
+                    laserwavelength = Double.parseDouble(args[i+1]);
+                    System.out.printf(" Excitation wavelength set to: %s nm\n", laserwavelength);
+                }
+                else
+                {
+                    System.out.printf(" Excitation wavelength set to default: %s nm\n", laserwavelength);
+                }
+            }
+            else if(args[i].startsWith("--width"))
+            {
+                if(args.length>i)
+                {
+                    generalBrd = Double.parseDouble(args[i+1]);
+                    System.out.printf(" Peak width set to: %s 1/cm\n", generalBrd);
+                }
+                else
+                {
+                    System.out.printf(" Peak width set to default: %s 1/cm\n", generalBrd);
+                }
+            }
+            else if(args[i].startsWith("--infreq"))
+            {
+                if(args.length>i)
+                {
+                    inFreq = Double.parseDouble(args[i+1]);
+                    System.out.printf(" Initial frequency set to: %s 1/cm\n", inFreq);
+                }
+                else
+                {
+                    System.out.printf(" Initial frequency set to default: %s 1/cm\n", inFreq);
+                }
+            }
+            else if(args[i].startsWith("--enfreq"))
+            {
+                if(args.length>i)
+                {
+                    enFreq = Double.parseDouble(args[i+1]);
+                    System.out.printf(" Final frequency set to: %s 1/cm\n", enFreq);
+                }
+                else
+                {
+                    System.out.printf(" Final frequency set to default: %s 1/cm\n", enFreq);
+                }
+            }
+            else if(args[i].startsWith("--stepfreq"))
+            {
+                if(args.length>i)
+                {
+                    stepFreq = Double.parseDouble(args[i+1]);
+                    System.out.printf(" Frequency step set to: %s 1/cm\n", stepFreq);
+                }
+                else
+                {
+                    System.out.printf(" Frequency step set to default: %s 1/cm\n", stepFreq);
+                }
+            }
+
+
             
 			if(args[i].startsWith("--elitefit"))
 			{
@@ -162,21 +220,24 @@ public class MainDriver {
 			}
 			else if(args[i].startsWith("--help"))
 			{
-				System.out.printf("\nKerogenGA version: %s\n\n", version);
+				System.out.printf("\nKerogenGA version: %s\n", version);
+                System.out.printf(" Grossman Group @ MIT\n\n", version);
 				System.out.println("Usage:");
 				System.out.println("--storeraman: store calculated raman activity into the database.");
-				System.out.println("    java -jar gt.jar --storeraman gaussianoutput infofile moleculename (with info file)");
-				System.out.println("    java -jar gt.jar --storeraman gaussianoutput null moleculename (without info file)\n");
+				System.out.println("    java -jar kga.jar --storeraman gaussianoutput infofile moleculename (with info file)");
+				System.out.println("    java -jar kga.jar --storeraman gaussianoutput null moleculename (without info file)\n");
 				System.out.println("--elitefit N: fit an experimental raman spectrum with N spectra using genetic algorithm.");
-				System.out.println("    java -jar gt.jar --elitefit 10 ramanfilename\n");
+				System.out.println("    java -jar kga.jar --elitefit 10 ramanfilename\n");
+                System.out.println("--spectra: extract the Raman spectra for a molecule in the database.");
+                System.out.println("    java -jar kga.jar --spectra moleculename --laser xxx ---width xxx --infreq xxx --enfreq xxx --stepfreq xxx\n");
 				System.out.println("--diamondoid: include diamondoids in fitting.");
-				System.out.println("    java -jar gt.jar --diamondoid --elitefit 10 ramanfilename\n");
+				System.out.println("    java -jar kga.jar --diamondoid --elitefit 10 ramanfilename\n");
 				System.out.println("--NIST: include NIST library in fitting.");
-				System.out.println("    java -jar gt.jar --NIST --elitefit 10 ramanfilename\n");
+				System.out.println("    java -jar kga.jar --NIST --elitefit 10 ramanfilename\n");
 				System.out.printf("--laser wavelength: Change excitation wavelength in nm (default: %s).\n", laserwavelength);
-				System.out.println("    java -jar gt.jar --laser 488.0 --NIST --elitefit 10 ramanfilename\n");
+				System.out.println("    java -jar kga.jar --laser 488.0 --NIST --elitefit 10 ramanfilename\n");
                 System.out.printf("--width peakWidth: Change peak width in 1/cm (default: %s).\n", generalBrd);
-                System.out.println("    java -jar gt.jar --width 10.0 --NIST --elitefit 10 ramanfilename\n");
+                System.out.println("    java -jar kga.jar --width 10.0 --NIST --elitefit 10 ramanfilename\n");
 			}
 		}
 		
@@ -205,8 +266,7 @@ public class MainDriver {
 		}
         if(spectramol)
         {
-            System.out.printf("\n Still under development\n\n");
-            extractSpectra(moleculename, generalBrd);
+            extractSpectra(moleculename, generalBrd, laserwavelength, inFreq, enFreq, stepFreq);
         }
 	}
 	
@@ -612,52 +672,47 @@ public class MainDriver {
 	}
 	
     
-    private static void extractSpectra(String moleculename, double generalBrd)
+    private static void extractSpectra(String moleculename, double generalBrd, double wavelength, double inFreq, double endFreq, double stepFreq)
     {
         ArrayList<DBObject> dbcollection = database.readcollectionlist("molecule");
         int sizeofdb = dbcollection.size();
-        System.out.printf("\n Size of the database %s\n", sizeofdb);
+        Spectrum targetSpectrum = new Spectrum();
         
+        String outname = moleculename + "_" + (int) wavelength + "nm_" + (int) generalBrd + "w.dat";
         
-        ArrayList<Spectrum> spectrumcollection = new ArrayList<Spectrum>();
-        ArrayList<Spectrum> originalspectrumcollection = new ArrayList<Spectrum>();
-        ArrayList<String> namecollection = new ArrayList<String>();
+        for(double i = inFreq; i < endFreq; i+=stepFreq)
+        {
+            targetSpectrum.addPeak(i, 0);
+        }
+        
+        ArrayList<Spectrum> spectraActivity = new ArrayList<Spectrum>();
         for (int i = 0; i < sizeofdb; i++)
         {
             if(moleculename.equals((String) dbcollection.get(i).get("name")))
             {
-                String currentSpName = (String) dbcollection.get(i).get("name");
-                originalspectrumcollection.add(database.readRamanfromdatabase(currentSpName));
-                System.out.printf("\n %s \n", originalspectrumcollection.get(0));
-                spectrumcollection.add(normalizeSpec(readinspectrum,
-                                            originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength));
-                
-                
-                //spectrumcollection.add(normalizeSpec(readinspectrum,
-                //                                     originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength));
-                //spectrumcollection.add(originalspectrumcollection.get(originalspectrumcollection.size()-1),generalBrd, wavelength);
-                
-                System.out.printf("\n OK! name: %s\n", dbcollection.get(i).get("name"));
+                spectraActivity.add(database.readRamanfromdatabase(moleculename));
+
+                targetSpectrum = normalizeSpec(targetSpectrum,
+                                            spectraActivity.get(spectraActivity.size()-1),generalBrd, 633.0);
             }
-            
         }
-        /*
+        
+        PrintWriter spectraoutput = null;
         try {
-            spectraoutput = new PrintWriter(new FileWriter(
-            namecollection.get(bestchromsome.getGene(l))+".dat"));
-            for (int m = 0; m < fittedspectra.get(l).size(); m++) {
-                spectraoutput.println(fittedspectra.get(l).print(m));
+            spectraoutput = new PrintWriter(new FileWriter(outname));
+            for (int m = 0; m < targetSpectrum.size(); m++)
+            {
+                    spectraoutput.println(targetSpectrum.print(m));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (spectraoutput != null)
-                spectraoutput.close();
-        }
-         */
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                
+                System.out.printf(" Spectra saved in: %s\n\n", outname);
+                if (spectraoutput != null)
+                    spectraoutput.close();
+            }
     }
-    
-    
     
 	private static void combineraman(String directoryname, double wavelength)
 	{
