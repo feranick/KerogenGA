@@ -11,8 +11,8 @@
 
 filename="checkpoint.conversion.txt"
 
-width=10.0
-laser=630.0
+width=5.0
+laser=633.0
 infreq=0.0
 enfreq=1800.0
 stepfreq=1.0
