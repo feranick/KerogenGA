@@ -32,3 +32,28 @@ This is compatible only with UNIX systems (Linux, MacOS). Run the following scri
 
 Copy the binary kga.jar in the location where it can be found using bash. Copy the folder "lib" in the same location as kga.jar.
 
+Usage
+======
+
+--storeraman: store calculated raman activity into the database.
+java -jar kga.jar --storeraman gaussianoutput infofile moleculename (with info file)
+java -jar kga.jar --storeraman gaussianoutput null moleculename (without info file)
+
+--elitefit N: fit an experimental raman spectrum with N spectra using genetic algorithm.
+java -jar kga.jar --elitefit 10 ramanfilename
+
+--spectra: extract the Raman spectra for a molecule in the database.
+java -jar kga.jar --spectra moleculename --laser xxx ---width xxx --infreq xxx --enfreq xxx --stepfreq xxx
+
+--diamondoid: include diamondoids in fitting.
+java -jar kga.jar --diamondoid --elitefit 10 ramanfilename
+
+--NIST: include NIST library in fitting.
+java -jar kga.jar --NIST --elitefit 10 ramanfilename
+
+--laser wavelength: Change excitation wavelength in nm (default: 633.0).
+java -jar kga.jar --laser 488.0 --NIST --elitefit 10 ramanfilename
+
+--width peakWidth: Change peak width in 1/cm (default: 5.0).
+java -jar kga.jar --width 10.0 --NIST --elitefit 10 ramanfilename
+
