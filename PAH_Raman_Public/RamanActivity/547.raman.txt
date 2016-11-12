@@ -1,1 +1,0 @@
-Frequencies[cm^-1]   RamanActivity[A^4/amu]
